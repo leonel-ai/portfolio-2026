@@ -1,9 +1,11 @@
-/* src/styles/global.scss */
-@use "./variables" as *;
+// src/styles/_variables.scss
+$bg-dark: #0a0a0a;
+$text-white: #f5f5f5;
+$accent-tech: #00ff41;
 
 body {
   background-color: $bg-dark;
-  color: $text-light;
+  color: $text-white;
   &.nav-open {
     overflow: hidden;
   }
