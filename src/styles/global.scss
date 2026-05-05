@@ -1,0 +1,25 @@
+/* src/styles/global.scss */
+@use "./variables" as *;
+
+:root {
+  --bg-color: #{$bg-dark}; // Pass SCSS vars to CSS vars if Three.js needs them
+}
+
+body {
+  margin: 0;
+  background-color: $bg-dark;
+  color: $text-white;
+  font-family: "Your-Editorial-Font", sans-serif;
+  overflow-x: hidden;
+
+  &.is-loading {
+    cursor: wait;
+  }
+}
+
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1; // Keep the Three.js vibe in the background
+}

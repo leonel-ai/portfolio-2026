@@ -1,0 +1,41 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+  <section class="hero">
+    <h1 class="hero-text">Leonela Guzman</h1>
+  </section>
+
+  <script>
+    import { gsap } from 'gsap';
+    import { PortfolioScene } from '../lib/scene';
+
+    // Initialize 3D
+    const container = document.getElementById('canvas-container');
+    if (container) new PortfolioScene(container);
+
+    // GSAP Entry Reveal
+    gsap.from(".hero-text", { 
+      opacity: 0, 
+      y: 50, 
+      duration: 1.5, 
+      ease: "expo.out",
+      delay: 0.5 
+    });
+  </script>
+</Layout>
+
+<style lang="scss">
+.hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &-text {
+      font-size: clamp(2rem, 10vw, 5rem);
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+  }
+</style>
