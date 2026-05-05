@@ -4,8 +4,13 @@ import Layout from '../layouts/Layout.astro';
 
 <Layout>
   <section class="hero">
-    <h1 class="hero-text">Leonela Guzman</h1>
-  </section>
+  <h1 class="hero-text">
+    <span class="name-part">Leonela</span>
+    <span class="name-part">Guzmán</span>
+    <span class="name-part">del</span>
+    <span class="name-part">Cid</span>
+  </h1>
+</section>
 
   <script>
     import { gsap } from 'gsap';
@@ -15,27 +20,66 @@ import Layout from '../layouts/Layout.astro';
     const container = document.getElementById('canvas-container');
     if (container) new PortfolioScene(container);
 
-    // GSAP Entry Reveal
-    gsap.from(".hero-text", { 
+    // GSAP Liquid Entrance
+    gsap.from(".name-part", { 
       opacity: 0, 
-      y: 50, 
-      duration: 1.5, 
+      filter: "blur(30px)",
+      y: 40,
+      rotateX: -20, // Adds a slight 3D "leaning" effect as they arrive
+      duration: 4, 
       ease: "expo.out",
+      stagger: 0.3, // This is the secret to the liquid feel
       delay: 0.5 
+    });
+
+    const nameParts = document.querySelectorAll('.name-part');
+
+    nameParts.forEach(part => {
+      part.addEventListener('mouseenter', () => {
+        gsap.to(part, {
+          scale: 1.05,
+          filter: "blur(0px)", // Ensures it stays sharp when active
+          duration: 0.4,
+          ease: "power2.out"
+        });
+      });
+
+      part.addEventListener('mouseleave', () => {
+        gsap.to(part, {
+          scale: 1,
+          duration: 0.6,
+          ease: "power4.inOut"
+        });
+      });
     });
   </script>
 </Layout>
 
 <style lang="scss">
-.hero {
+  .hero {
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
+    padding: 0 5vw;
+
     &-text {
-      font-size: clamp(2rem, 10vw, 5rem);
+      font-size: clamp(2rem, 8vw, 7rem); // Slightly adjusted for the length
       font-weight: 900;
+      letter-spacing: -0.06em;
       text-transform: uppercase;
+      color: #fff;
+      mix-blend-mode: difference;
+      z-index: 10;
+      display: flex;
+      gap: 0.2em; // Precise control over the space between name parts
+      white-space: nowrap;
     }
+  }
+
+  .name-part {
+    display: inline-block;
+    will-change: transform, filter, opacity; // Optimization for the liquid animation
   }
 </style>

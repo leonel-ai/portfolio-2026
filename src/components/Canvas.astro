@@ -1,0 +1,29 @@
+---
+// src/components/Canvas.astro
+---
+<div id="canvas-container"></div>
+<div id="custom-cursor"></div>
+
+<style lang="scss">
+  #canvas-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1; // Sits behind your Layout content
+    background-color: #000; // The base "obsidian" layer
+    pointer-events: none; // Prevents the canvas from blocking clicks on links/text
+  }
+  #custom-cursor {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+  transition: transform 0.1s ease;
+}
+</style>

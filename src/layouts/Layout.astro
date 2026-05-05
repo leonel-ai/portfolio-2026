@@ -1,5 +1,5 @@
 ---
-// src/layouts/Layouts.astro
+// src/layouts/Layout.astro
 import '../styles/global.scss';
 import Canvas from '../components/Canvas.astro';
 ---
@@ -10,10 +10,20 @@ import Canvas from '../components/Canvas.astro';
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
-    <title>Leonela Guzman | Portfolio</title>
+    <title>Leonela Guzmán del Cid | Portfolio</title>
   </head>
   <body>
     <Canvas /> <main>
     <slot /> </main> 
+    <script>
+      window.addEventListener('mousemove', (e) => {
+        gsap.to("#custom-cursor", {
+          x: e.clientX,
+          y: e.clientY,
+          duration: 0.1
+        });
+      });
+    </script>
   </body>
 </html>
+
