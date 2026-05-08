@@ -2,28 +2,114 @@
 // src/layouts/Layout.astro
 import '../styles/global.scss';
 import Canvas from '../components/Canvas.astro';
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
 ---
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-    <title>Leonela Guzmán del Cid | Portfolio</title>
-  </head>
-  <body>
-    <Canvas /> <main>
-    <slot /> </main> 
-    <script>
-      window.addEventListener('mousemove', (e) => {
-        gsap.to("#custom-cursor", {
-          x: e.clientX,
-          y: e.clientY,
-          duration: 0.1
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Astro description" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+	</head>
+	<body>
+		<Canvas />
+
+    <nav class="meta-header">
+      <div class="meta-left">
+        <span class="mono">Broadcasting Live // 29.7604° N, 95.3698° W</span>
+      </div>
+      <div class="meta-right">
+        <span class="mono" id="live-clock">00:00:00</span>
+      </div>
+    </nav>
+		
+		<main>
+			<slot />
+		</main>
+
+		<script>
+    import { gsap } from 'gsap';
+
+    const moveCursor = () => {
+      const cursor = document.getElementById('custom-cursor');
+      
+      if (cursor) {
+        console.log("Cursor found, initiating movement.");
+        window.addEventListener('mousemove', (e) => {
+          gsap.to(cursor, {
+            x: e.clientX,
+            y: e.clientY,
+            duration: 0.05,
+            xPercent: -50,
+            yPercent: -50,
+            ease: "power2.out"
+          });
         });
-      });
-    </script>
-  </body>
+      } else {
+        console.error("Cursor element not found in DOM.");
+      }
+    };
+
+    // Run immediately and also on load to be safe
+    moveCursor();
+    window.addEventListener('load', moveCursor);
+  </script>
+  <script>
+    const initClock = () => {
+      const clockElement = document.getElementById('live-clock');
+      if (!clockElement) return;
+
+      const update = () => {
+        const now = new Date();
+        clockElement.textContent = now.toLocaleTimeString('en-US', { 
+          hour12: false, 
+          hour: '2-digit', 
+          minute: '2-digit', 
+          second: '2-digit' 
+        });
+      };
+
+      setInterval(update, 1000);
+      update();
+    };
+
+    // Run on initial load
+    if (document.readyState === 'complete') {
+      initClock();
+    } else {
+      window.addEventListener('load', initClock);
+    }
+  </script>
+	</body>
 </html>
 
+<style lang="scss">
+  .meta-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%; // Use % instead of vw
+    padding: 2rem 5vw; // Tighten horizontal padding slightly if needed
+    display: flex;
+    justify-content: space-between;
+    z-index: 100;
+    pointer-events: none;
+    box-sizing: border-box; // Ensures padding doesn't add to the width
+
+    .mono {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.3);
+    }
+  }
+</style>

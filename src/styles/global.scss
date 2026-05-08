@@ -3,6 +3,14 @@
 
 :root {
   --bg-color: {$bg-dark}; // Pass SCSS vars to CSS vars if Three.js needs them
+  --text-color: {$text-white};
+  --accent-color: {$accent-color};
+  --line-color: {$line-color};
+  --text-muted: {$text-muted};
+}
+
+html, body {
+  cursor: none; // Hides the default arrow
 }
 
 body {
@@ -11,9 +19,24 @@ body {
   color: $text-white;
   font-family: Arial, sans-serif;
   overflow-x: hidden;
+  transition: background-color 0.8s ease, color 0.8s ease;
 
   &.is-loading {
     cursor: wait;
+  }
+
+   &.nav-open {
+    overflow: hidden;
+  }
+
+  &::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: url("/assets/textures/AdobeStock_1663136817.jpeg");
+    opacity: 0.05; // Very subtle!
+    pointer-events: none;
+    mix-blend-mode: screen;
   }
 }
 
@@ -22,4 +45,8 @@ canvas {
   top: 0;
   left: 0;
   z-index: -1; // Keep the Three.js vibe in the background
+}
+
+a, button, [role="button"] {
+  cursor: none; // Ensures the "hand" icon is also hidden on links
 }

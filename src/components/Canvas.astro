@@ -14,6 +14,20 @@
     z-index: -1; // Sits behind your Layout content
     background-color: #000; // The base "obsidian" layer
     pointer-events: none; // Prevents the canvas from blocking clicks on links/text
+
+    &::after {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.04; // Keep this very low for sophistication
+      z-index: 1;
+      background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+      filter: contrast(150%) brightness(100%);
+}
   }
   #custom-cursor {
   position: fixed;

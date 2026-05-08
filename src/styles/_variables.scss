@@ -1,12 +1,7 @@
 // src/styles/_variables.scss
-$bg-dark: #0a0a0a;
-$text-white: #f5f5f5;
-$accent-tech: #00ff41;
-
-body {
-  background-color: $bg-dark;
-  color: $text-white;
-  &.nav-open {
-    overflow: hidden;
-  }
-}
+$bg-dark: #0e0e0e; // The "Spring/Summer" off-black
+$text-white: #f1f1f1;
+$accent-color: #e42428;
+$line-color: rgba(255, 255, 255, 0.1);
+$font-mono: "SF Mono", "Monaco", "Inconsolata", monospace;
+$text-muted: rgba(241, 241, 241, 0.5);

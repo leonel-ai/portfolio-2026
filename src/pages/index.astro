@@ -1,57 +1,247 @@
 ---
+// src/pages/index.astro
 import Layout from '../layouts/Layout.astro';
+
+const lines = [
+  { text: "Leonela", isRed: true },
+  { text: "Guzmán", isRed: false },
+  { text: "del Cid", isRed: false }
+];
 ---
 
-<Layout>
+<Layout title="Leonela Guzmán del Cid">
   <section class="hero">
-  <h1 class="hero-text">
-    <span class="name-part">Leonela</span>
-    <span class="name-part">Guzmán</span>
-    <span class="name-part">del</span>
-    <span class="name-part">Cid</span>
-  </h1>
-</section>
+    <h1 class="hero-name">
+      {lines.map((line) => (
+        <div class={`line ${line.isRed ? 'red-text' : ''}`}>
+          {line.text.split("").map((char) => (
+            <span class="char">{char === " " ? "\u00A0" : char}</span>
+          ))}
+        </div>
+      ))}
+    </h1>
+  </section>
+
+  <section class="manifesto">
+    <div class="manifesto-grid">
+      <div class="label-col">
+        <div class="sticky-meta">
+          <span class="mono">01 / PHILOSOPHY</span>
+          <div class="tag-cloud">
+            <span class="tag">Full Stack</span>
+            <span class="tag">Art Direction</span>
+            <span class="tag">Critical Theory</span>
+          </div>
+          <div class="availability">
+            <span class="dot"></span>
+            <span class="mono">Available for projects — 2026</span>
+          </div>
+        </div>
+      </div>
+      <div class="content-col">
+        <h2 class="manifesto-title">Experience as Proof</h2>
+        <p class="manifesto-text">
+          I've spent a decade at the intersection of <span>fashion</span>, <span>political theory</span>, and <span>full-stack engineering</span>. 
+           No standard gallery of screenshots here. Just insights.
+        </p>
+        <p class="manifesto-text secondary">
+          Currently broadcasting <a href="#" class="red-link">Vest Code</a> on 96.1 KTRU and building digital infrastructure at Rice University.
+        </p>
+        <div class="experience-log">
+          <div class="log-item">
+            <div class="log-meta">
+              <span class="mono">Current</span>
+              <span class="mono">2022—Present</span>
+            </div>
+            <div class="log-title">
+              <h3>Lead Front-End Developer</h3>
+              <p>Rice University — Public Affairs</p>
+            </div>
+          </div>
+
+          <div class="log-item">
+            <div class="log-meta">
+              <span class="mono">Broadcast</span>
+              <span class="mono">2021—Present</span>
+            </div>
+            <div class="log-title">
+              <h3>Radio Host // Vest Code</h3>
+              <p>KTRU Houston 96.1 FM</p>
+            </div>
+          </div>
+
+          <div class="log-item">
+            <div class="log-meta">
+              <span class="mono">Fashion</span>
+              <span class="mono">2014—2016</span>
+            </div>
+            <div class="log-title">
+              <h3>Communications Director</h3>
+              <p>New Orleans Fashion Week</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="archive">
+    <div class="archive-header">
+      <span class="mono">Selected Archive</span>
+    </div>
+    <table class="archive-table">
+      <thead>
+        <tr class="mono">
+          <th>Year</th>
+          <th>Project</th>
+          <th>Role</th>
+          <th>Field</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2015</td>
+          <td>Scream: The TV Series</td>
+          <td>Art Dept</td>
+          <td>MTV / Film</td>
+        </tr>
+        <tr>
+          <td>2016</td>
+          <td>Primetime Emmy Awards</td>
+          <td>Styling Asst</td>
+          <td>Entertainment</td>
+        </tr>
+        <tr>
+          <td>2024</td>
+          <td>Staff Appreciation</td>
+          <td>Lead Dev</td>
+          <td>Education</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
 
   <script>
     import { gsap } from 'gsap';
     import { PortfolioScene } from '../lib/scene';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+    
+    gsap.registerPlugin(ScrollTrigger);
 
-    // Initialize 3D
+    // Initialize 3D Scene
     const container = document.getElementById('canvas-container');
     if (container) new PortfolioScene(container);
 
-    // GSAP Liquid Entrance
-    gsap.from(".name-part", { 
+    // 1. Hero Entrance
+    gsap.from(".char", { 
       opacity: 0, 
-      filter: "blur(30px)",
-      y: 40,
-      rotateX: -20, // Adds a slight 3D "leaning" effect as they arrive
-      duration: 4, 
+      filter: "blur(20px)",
+      y: "50%", 
+      skewY: 5,
+      transformOrigin: "0% 100%", 
+      duration: 2, 
       ease: "expo.out",
-      stagger: 0.3, // This is the secret to the liquid feel
+      stagger: 0.03,
       delay: 0.5 
     });
 
-    const nameParts = document.querySelectorAll('.name-part');
-
-    nameParts.forEach(part => {
-      part.addEventListener('mouseenter', () => {
-        gsap.to(part, {
+    // 2. Character Hover Effects
+    const chars = document.querySelectorAll('.char');
+    chars.forEach(char => {
+      char.addEventListener('mouseenter', () => {
+        gsap.to(char, {
           scale: 1.05,
-          filter: "blur(0px)", // Ensures it stays sharp when active
           duration: 0.4,
           ease: "power2.out"
         });
       });
 
-      part.addEventListener('mouseleave', () => {
-        gsap.to(part, {
+      char.addEventListener('mouseleave', () => {
+        gsap.to(char, {
           scale: 1,
           duration: 0.6,
           ease: "power4.inOut"
         });
       });
     });
+
+    // 3. Scroll Trigger Animations
+    const initScroll = () => {
+      // Manifesto Grid Reveal
+      gsap.from(".manifesto-grid", {
+        scrollTrigger: {
+          trigger: ".manifesto",
+          start: "top 80%",
+          toggleActions: "play none none reverse",
+        },
+        opacity: 0,
+        y: 60,
+        duration: 1.5,
+        ease: "power4.out"
+      });
+
+      // Hero Parallax Fade
+      gsap.to(".hero-name", {
+        scrollTrigger: {
+          trigger: ".hero",
+          start: "top top",
+          end: "bottom top",
+          scrub: true
+        },
+        y: -150,
+        opacity: 0,
+        filter: "blur(10px)"
+      });
+
+      ScrollTrigger.refresh();
+    };
+
+    // Run on load to ensure positions are calculated correctly
+    window.addEventListener('load', initScroll);
+
+    // // Theme Switch
+    // const initThemeSwitches = () => {
+    //   // Define your themes
+    //   const themes = [
+    //     {
+    //       trigger: ".hero",
+    //       bg: "#0e0e0e",
+    //       text: "#ffffff",
+    //       line: "rgba(255, 255, 255, 0.1)"
+    //     },
+    //     {
+    //       trigger: ".manifesto",
+    //       bg: "#f5f5f5", // Let's say you want a "Gallery White" for the manifesto
+    //       text: "#0e0e0e",
+    //       line: "rgba(0, 0, 0, 0.1)"
+    //     },
+    //     {
+    //       trigger: ".archive",
+    //       bg: "#0e0e0e",
+    //       text: "#ffffff",
+    //       line: "rgba(255, 255, 255, 0.1)"
+    //     }
+    //   ];
+
+    //   themes.forEach(theme => {
+    //     ScrollTrigger.create({
+    //       trigger: theme.trigger,
+    //       start: "top 50%", // Change when the section is halfway up
+    //       onEnter: () => updateTheme(theme),
+    //       onEnterBack: () => updateTheme(theme),
+    //     });
+    //   });
+    // };
+
+    // const updateTheme = (theme) => {
+    //   const root = document.documentElement;
+    //   root.style.setProperty('--bg-color', theme.bg);
+    //   root.style.setProperty('--text-color', theme.text);
+    //   root.style.setProperty('--line-color', theme.line);
+    // };
+
+    // // Call this inside your window.load or initScroll function
+    // initThemeSwitches();
   </script>
 </Layout>
 
@@ -59,27 +249,218 @@ import Layout from '../layouts/Layout.astro';
   .hero {
     height: 100vh;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: center; // Vertically centered in the viewport
+    justify-content: flex-start; // Pin to the left
+    padding: 0 8vw; // Deep horizontal margins like luxury sites
     overflow: hidden;
-    padding: 0 5vw;
 
-    &-text {
-      font-size: clamp(2rem, 8vw, 7rem); // Slightly adjusted for the length
-      font-weight: 900;
-      letter-spacing: -0.06em;
-      text-transform: uppercase;
-      color: #fff;
-      mix-blend-mode: difference;
-      z-index: 10;
+    &-name {
       display: flex;
-      gap: 0.2em; // Precise control over the space between name parts
-      white-space: nowrap;
+      flex-direction: column;
+      align-items: flex-start; // Force all three lines to align left
+      font-size: clamp(3.5rem, 14vw, 11rem); // Go big for that agency feel
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.07em; 
+      line-height: 0.78; // Aggressively tight vertical stacking
+      margin: 0;
+
+      .line {
+        display: block;
+        color: #fff;
+        white-space: nowrap;
+
+        &.red-text {
+          color: #E42428; // The LVMH/SpringSummer red
+        }
+      }
+      .char {
+        display: inline-block;
+        will-change: transform, opacity;
+      }
     }
   }
 
-  .name-part {
-    display: inline-block;
-    will-change: transform, filter, opacity; // Optimization for the liquid animation
+  .manifesto {
+    padding: 20vh 8vw;
+    background-color: var(--bg-color);
+    border-top: 1px solid var(--line-color);
+    overflow: hidden; // Keeps the entrance clean
+    position: relative;
+
+    &-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr; // Asymmetric layout
+      gap: 4rem;
+    }
+
+    .experience-log {
+      margin-top: 5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+      .log-item {
+        display: grid;
+        grid-template-columns: 1fr 2.5fr; // Asymmetric grid
+        padding: 2rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.4s ease;
+        cursor: default;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.02);
+          padding-left: 1rem; // Subtle "shift" interaction
+          
+          .log-title h3 {
+            color: #E42428; // Ties back to your name
+          }
+        }
+      }
+
+      .log-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        
+        .mono {
+          font-size: 9px;
+          color: rgba(255, 255, 255, 0.3);
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
+        }
+      }
+
+      .log-title {
+        h3 {
+          font-size: 1.5rem;
+          margin: 0;
+          text-transform: uppercase;
+          font-weight: 800;
+          letter-spacing: -0.02em;
+          transition: color 0.3s ease;
+        }
+        p {
+          margin: 0.5rem 0 0 0;
+          color: rgba(255, 255, 255, 0.5);
+          font-size: 1rem;
+        }
+      }
+    }
   }
+
+  .label-col .mono {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.3);
+    letter-spacing: 0.2em;
+  }
+
+  .manifesto-title {
+    font-size: clamp(2rem, 5vw, 4rem);
+    text-transform: uppercase;
+    font-weight: 900;
+    margin-bottom: 3rem;
+    letter-spacing: -0.04em;
+  }
+
+  .manifesto-text {
+    font-size: clamp(1.1rem, 2vw, 1.8rem);
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 800px;
+    margin-bottom: 2rem;
+
+    span {
+      color: #fff; // Highlighting the key industry experience
+      font-weight: 600;
+    }
+
+    &.secondary {
+      font-size: 1.1rem;
+      opacity: 0.6;
+    }
+  }
+
+.red-link {
+  color: #E42428;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border 0.3s ease;
+  
+  &:hover {
+    border-bottom-color: #E42428;
+  }
+}
+
+.sticky-meta {
+  position: sticky;
+  top: 10vh;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.tag-cloud {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 4px 8px;
+    width: fit-content;
+  }
+}
+
+.availability {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  .dot {
+    width: 6px;
+    height: 6px;
+    background: #E42428;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #E42428;
+  }
+}
+
+.archive {
+  margin-top: 10vh;
+  padding-bottom: 10vh;
+
+  &-header {
+    border-bottom: 1px solid #fff;
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+    .mono { color: #fff; }
+  }
+
+  .archive-table {
+    width: 100%;
+    border-collapse: collapse;
+    
+    th, td {
+      text-align: left;
+      padding: 1.2rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.9rem;
+    }
+
+    th {
+      color: rgba(255, 255, 255, 0.3);
+      font-weight: 400;
+      text-transform: uppercase;
+    }
+
+    tr:hover td {
+      color: #E42428;
+      cursor: crosshair;
+    }
+  }
+}
 </style>
